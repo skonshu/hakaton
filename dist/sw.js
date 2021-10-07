@@ -1,1 +1,0 @@
-self.addEventListener("insatall",(e=>{})),self.addEventListener("activate",(async e=>{})),self.addEventListener("fetch",(e=>{}));
