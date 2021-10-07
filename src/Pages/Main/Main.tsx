@@ -9,7 +9,7 @@ import { PointList } from './parts/PointList'
 import { CalculateRoutes } from './parts/CalculateRoutes'
 import axios from 'axios'
 import { GET_INITIAL_POINTS_ENDPOINT, MAIN_URL, START_CALC_ENDPOINT, TRANSPORT_TYPE } from '../../constants'
-
+import { useLocation } from 'react-router-dom';
 import './styles.css'
 
 interface IPointsResponse {
@@ -25,7 +25,6 @@ interface IPointsRequest {
 interface IPointsCalculateRequest extends IPointsRequest {
     lat: number;
     lon: number;
-    date: string;
     movmentType: TRANSPORT_TYPE
 }
 
@@ -36,16 +35,27 @@ export const Main = (props: any) => {
     const [currentStep, setCurrentStep] = useState(1)
     const [points, setPoints] = useState<IPoint[]>([])
     const [movmentType, setMovementType] = useState(TRANSPORT_TYPE.CAR)
+    const search = useLocation().search;
 
-    const parsed: Record<string, any> = queryString.parse(props.location.search) || {};
-    // const convertedQueryParams: IQueryParams = convertQueryParams(parsed)
-    const convertedQueryParams =
-    {
-        employeeId: 1125,
-        date: '2021-10-07',
-        lon: 37.3376426,
-        lat: 55.7386526,
-    }
+    const employeeId = new URLSearchParams(search).get('emploee_id');
+    const lat = new URLSearchParams(search).get('lat');
+    const lon = new URLSearchParams(search).get('lon');
+    const currentDate = new URLSearchParams(search).get('currentDate');
+
+    const convertedQueryParams: IQueryParams = convertQueryParams({
+        employeeId,
+        lat,
+        lon,
+        currentDate
+    })
+    debugger
+    // const convertedQueryParams =
+    // {
+    //     employeeId: 1125,
+    //     date: '2021-10-07',
+    //     lon: 37.3376426,
+    //     lat: 55.7386526,
+    // }
     useEffect(() => {
 
         setMessage('')
@@ -55,7 +65,7 @@ export const Main = (props: any) => {
                 setLoading(true)
                 const response = await axios.post<IPointsRequest, IPointsResponse>(`${MAIN_URL}${GET_INITIAL_POINTS_ENDPOINT}`,
                     {
-                        employeeId: convertedQueryParams.employeeId, date: convertedQueryParams.date,
+                        employeeId: convertedQueryParams.employeeId, date: convertedQueryParams.currentDate,
                     },
                 );
 
@@ -82,7 +92,7 @@ export const Main = (props: any) => {
                     employeeId: convertedQueryParams.employeeId,
                     lat: convertedQueryParams.lat,
                     lon: convertedQueryParams.lon,
-                    date: convertedQueryParams.date,
+                    date: convertedQueryParams.currentDate,
                     movmentType: movmentType
                 }
             )

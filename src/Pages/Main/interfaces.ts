@@ -1,5 +1,5 @@
 export interface IQueryParams {
-    date: string;
+    currentDate: string;
     employeeId: number;
     lat: number
     lon: number

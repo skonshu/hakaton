@@ -37,7 +37,7 @@ export const App = () => (
                     }}
                 >
                     <Switch>
-                        <Route path="/" component={Main} />
+                        <Route component={Main} />
                     </Switch>
                 </Content>
             </Layout>
