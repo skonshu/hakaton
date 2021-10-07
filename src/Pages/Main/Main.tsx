@@ -1,6 +1,5 @@
-import { Col, Row, Button, Alert, RadioChangeEvent } from 'antd'
+import { Col, Row, Button, Alert, RadioChangeEvent, Progress } from 'antd'
 import React, { useContext, useEffect, useState } from 'react'
-import queryString from 'query-string'
 import { Map2GIS } from '../../components/Map/Map'
 import { convertQueryParams } from './utils'
 import { IPoint, IQueryParams } from './interfaces'
@@ -48,7 +47,7 @@ export const Main = (props: any) => {
         lon,
         currentDate
     })
-    debugger
+
     // const convertedQueryParams =
     // {
     //     employeeId: 1125,
@@ -68,8 +67,10 @@ export const Main = (props: any) => {
                         employeeId: convertedQueryParams.employeeId, date: convertedQueryParams.currentDate,
                     },
                 );
-
                 setPoints(response?.data?.points || [])
+                if (Array.isArray(response?.data?.points) && response?.data?.points.length === 0) {
+                    setMessage(`На сегодня точек больше нет!`)
+                }
 
             } catch (err) {
                 setMessage(`Ошибка получения точек: ${err}`)
@@ -141,7 +142,8 @@ export const Main = (props: any) => {
                 </Col>
             </Row>
             <Row >
-                <Col md={6}>
+                <Col md={6} style={{ textAlign: "center" }}>
+                    <Progress style={{ marginBottom: "2rem" }} strokeLinecap="square" type="circle" percent={Math.round(((currentStep + 1) / points.length) * 100)} />
                     <PointList
                         handleChangeStep={handleChangeStep}
                         loading={loading}
@@ -149,15 +151,20 @@ export const Main = (props: any) => {
                         currentStep={currentStep}
                     />
                 </Col>
-                <Col md={4}>
-                    <CalculateRoutes
-                        handleStartCalc={handleStartCalc}
-                        handleChangeMovmentType={handleChangeMovmentType}
-                        isDdisableButton={loading}
-                    />
-                </Col>
-                <Col md={14}>
-                    <Map2GIS lat={convertedQueryParams.lat} lon={convertedQueryParams.lon} points={points} />
+                <Col md={18} >
+
+                    {
+                        !!points.length &&
+                        <>
+                            <CalculateRoutes
+                                handleStartCalc={handleStartCalc}
+                                handleChangeMovmentType={handleChangeMovmentType}
+                                isDdisableButton={loading}
+                            />
+                            <Map2GIS lat={convertedQueryParams.lat} lon={convertedQueryParams.lon} points={points} />
+                        </>
+                    }
+
                 </Col>
             </Row>
 

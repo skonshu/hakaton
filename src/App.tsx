@@ -27,7 +27,7 @@ export const App = () => (
 
             <Layout style={{ padding: '0 24px 24px' }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>
-                    <Breadcrumb.Item><Link to="/">Главная</Link></Breadcrumb.Item>
+                    <Breadcrumb.Item><Link to="/">Расчет оптимального маршрута</Link></Breadcrumb.Item>
                 </Breadcrumb>
                 <Content
                     className="site-layout-background"

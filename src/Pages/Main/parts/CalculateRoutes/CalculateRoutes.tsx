@@ -13,7 +13,7 @@ interface IProps {
 }
 
 export const CalculateRoutes: React.FC<IProps> = ({ handleStartCalc, handleChangeMovmentType, isDdisableButton }) => {
-    return (<>
+    return (<div style={{ position: 'absolute', zIndex: 100 }}>
         <Row justify="center">
             <Col md={24}>
                 <Radio.Group defaultValue={TRANSPORT_TYPE.CAR} buttonStyle="solid" onChange={handleChangeMovmentType}>
@@ -23,15 +23,14 @@ export const CalculateRoutes: React.FC<IProps> = ({ handleStartCalc, handleChang
                 </Radio.Group>
             </Col>
         </Row>
-        <Divider />
-        <Row justify="center" >
+        <Row justify="center" style={{ marginTop: '0.25rem' }} >
             <Col md={24}>
-                <Button size="large" type="primary" onClick={handleStartCalc} disabled={isDdisableButton}>
+                <Button size="large" type="primary" onClick={handleStartCalc} disabled={isDdisableButton} style={{ width: '100%' }}>
                     Построить маршрут
                 </Button>
             </Col>
         </Row>
-    </>
+    </div >
 
     )
 }

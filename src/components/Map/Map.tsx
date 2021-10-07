@@ -22,12 +22,12 @@ export const Map2GIS: React.FC<IProps> = ({ lat, lon, points }) => {
     useEffect(() => {
 
         let userMarker: Marker;
-        let pointMarkers: Marker[];
+        let pointMarkers: Marker[] = [];
         load().then((mapglAPI) => {
             const map = new mapglAPI.Map('map-container', {
                 center: [lon, lat],
                 zoom: 13,
-                key: '810c6285-76cf-4577-a0ce-775d22bc3adb-',
+                key: '810c6285-76cf-4577-a0ce-775d22bc3adb',
             });
 
             userMarker = new mapglAPI.Marker(map, {
@@ -37,10 +37,18 @@ export const Map2GIS: React.FC<IProps> = ({ lat, lon, points }) => {
             setMapInstance(map);
 
             if (points.length) {
-                points.forEach(point => {
+                points.forEach((point, index) => {
                     const marker = new mapglAPI.Marker(map, {
                         coordinates: [point.lon, point.lat],
+                        icon: 'https://docs.2gis.com/img/mapgl/marker.svg',
+                        label: {
+                            text: String(index + 1),
+                            fontSize: 28,
+                            color: '#1411ee',
+                            offset: [0, 25]
+                        }
                     });
+
                     pointMarkers.push(marker)
                 })
             }
@@ -52,7 +60,7 @@ export const Map2GIS: React.FC<IProps> = ({ lat, lon, points }) => {
             userMarker && userMarker.destroy()
             pointMarkers.forEach(pointMarker => pointMarker && pointMarker.destroy())
         }
-    }, []);
+    }, [points]);
 
     return (
         <MapWrapper />
