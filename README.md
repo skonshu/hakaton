@@ -1,1 +1,1 @@
-# hakaton
+employee_id, lat, lon, date
