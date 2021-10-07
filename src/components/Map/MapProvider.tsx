@@ -2,7 +2,7 @@ import { Map } from '@2gis/mapgl/types';
 import React from 'react'
 export const MapContext = React.createContext({
     mapInstance: {} as Map,
-    setMapInstance: (map: Map) => { }
+    setMapInstance: (map: Map) => { },
 })
 
 export const MapProvider: React.FC = (props) => {

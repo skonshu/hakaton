@@ -1,46 +1,47 @@
 import React from 'react';
-import { Layout, Menu, Breadcrumb, Row, Col } from 'antd';
-
-
+import { Layout, Menu, Breadcrumb } from 'antd';
 import './index.css';
 import 'antd/dist/antd.css';
-import { Map2GIS } from './Map/Map';
-import { SelectUserRoutes } from './SelectUserRoutes/SelectUserRoutes';
 import { Footer } from 'antd/lib/layout/layout';
 import logo from './assets/logo.png'
-
+import { Main } from './Pages/Main/Main';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+} from "react-router-dom";
 const { Header, Content } = Layout;
 
 export const App = () => (
-    <Layout>
-        <Header className="header">
-            <img src={logo} alt="torchlight in the sky" className="logo" />
-            <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-                <Menu.Item key="1">Расчет оптимального маршрута</Menu.Item>
-            </Menu>
-        </Header>
+    <Router >
+        <Layout>
+            {/* <Header className="header">
+                <img src={logo} alt="torchlight in the sky" className="logo" />
+                <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
 
-        <Layout style={{ padding: '0 24px 24px' }}>
-            <Breadcrumb style={{ margin: '16px 0' }}>
-                <Breadcrumb.Item>Главная</Breadcrumb.Item>
-            </Breadcrumb>
-            <Content
-                className="site-layout-background"
-                style={{
-                    padding: 24,
-                    margin: 0,
-                }}
-            >
-                <Row >
-                    <Col md={6}>
-                        <SelectUserRoutes />
-                    </Col>
-                    <Col md={18}>
-                        <Map2GIS />
-                    </Col>
-                </Row>
-            </Content>
+                    <Menu.Item key="1">Расчет оптимального маршрута</Menu.Item>
+
+                </Menu>
+            </Header> */}
+
+            <Layout style={{ padding: '0 24px 24px' }}>
+                <Breadcrumb style={{ margin: '16px 0' }}>
+                    <Breadcrumb.Item><Link to="/">Главная</Link></Breadcrumb.Item>
+                </Breadcrumb>
+                <Content
+                    className="site-layout-background"
+                    style={{
+                        padding: 24,
+                        margin: 0,
+                    }}
+                >
+                    <Switch>
+                        <Route path="/" component={Main} />
+                    </Switch>
+                </Content>
+            </Layout>
+            <Footer />
         </Layout>
-        <Footer />
-    </Layout>
+    </ Router>
 )

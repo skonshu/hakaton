@@ -47,4 +47,48 @@ module.exports = {
             ],
         }),
     ],
+    devServer: {
+        onBeforeSetupMiddleware: function (devServer) {
+            if (!devServer) {
+                throw new Error('webpack-dev-server is not defined');
+            }
+
+            devServer.app.post('/compass/get-point-list', function (req, res) {
+                setTimeout(() => res.json({
+                    points: [
+                        {
+                            address: 'Москва.уд. Озерная,44',
+                            lat: 55.22222,
+                            lon: 44.55555,
+                            pointName: 'Компания 1'
+                        },
+                        {
+                            address: 'Москва.уд. Озерная,2',
+                            lat: 55.22222,
+                            lon: 44.55555,
+                            pointName: 'Компания 2'
+                        },
+                        {
+                            address: 'Москва.уд. Озерная,66',
+                            lat: 55.22222,
+                            lon: 44.55555,
+                            pointName: 'Компания 3'
+                        },
+                        {
+                            address: 'Москва.уд. Озерная,33',
+                            lat: 55.22222,
+                            lon: 44.55555,
+                            pointName: 'Компания 4'
+                        },
+                        {
+                            address: 'Москва.уд. Озерная,343',
+                            lat: 55.22222,
+                            lon: 44.55555,
+                            pointName: 'Компания 5'
+                        }
+                    ]
+                }), 2000);
+            });
+        },
+    }
 };
