@@ -163,7 +163,12 @@ export const Main = (props: any) => {
                                 handleChangeMovmentType={handleChangeMovmentType}
                                 isDdisableButton={loading}
                             />
-                            <Map2GIS lat={convertedQueryParams.lat} lon={convertedQueryParams.lon} points={points} isDestroy={isDestroy} />
+                            <Map2GIS lat={convertedQueryParams.lat}
+                                lon={convertedQueryParams.lon}
+                                points={points}
+                                isDestroy={isDestroy}
+                                loading={loading}
+                            />
                         </>
                     }
 

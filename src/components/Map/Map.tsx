@@ -4,11 +4,13 @@ import React from 'react'
 import { MapContext } from './MapProvider';
 import { Marker } from '@2gis/mapgl/types';
 import { IPoint } from '../../Pages/Main/interfaces';
+import { Spin } from 'antd';
 interface IProps {
     lat: number;
     lon: number;
     points: IPoint[];
     isDestroy: boolean;
+    loading: boolean;
 }
 
 const MapWrapper = React.memo(
@@ -18,7 +20,7 @@ const MapWrapper = React.memo(
     () => true,
 );
 
-export const Map2GIS: React.FC<IProps> = ({ lat, lon, points, isDestroy }) => {
+export const Map2GIS: React.FC<IProps> = ({ lat, lon, points, isDestroy, loading }) => {
     const { mapInstance, setMapInstance } = React.useContext(MapContext);
     const [pointMarkers, setPointMarkers] = React.useState<Marker[]>([])
 
@@ -27,6 +29,7 @@ export const Map2GIS: React.FC<IProps> = ({ lat, lon, points, isDestroy }) => {
         pointMarkers.forEach(m => {
             m && m.destroy?.()
         })
+        mapInstance && mapInstance.destroy?.();
     }
 
     useEffect(() => {
@@ -70,8 +73,13 @@ export const Map2GIS: React.FC<IProps> = ({ lat, lon, points, isDestroy }) => {
             userMarker && userMarker.destroy?.()
             pointMarkers.forEach(pointMarker => pointMarker && pointMarker.destroy?.())
         }
-    }, [points, isDestroy]);
+    }, [isDestroy]);
 
+    if (loading) {
+        return <div style={{ width: "100%", height: "100%", display: 'flex', justifyContent: "center", alignItems: "center" }}>
+            <Spin size="large" />
+        </div>
+    }
     return (
         <MapWrapper />
     )
