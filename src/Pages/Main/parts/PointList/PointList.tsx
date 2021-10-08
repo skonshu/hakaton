@@ -24,13 +24,16 @@ export const PointList: React.FC<IProps> = ({
 
     return (
         <div className="container">
-            {loading && <Skeleton loading={loading} paragraph={{ rows: 6 }} />}
-            <Steps current={currentStep} onChange={handleChangeStep} direction="vertical">
+            {loading && <Skeleton loading={loading} active={true} paragraph={{ rows: 6 }} />}
+            {
+                !loading && <Steps current={currentStep} onChange={handleChangeStep} direction="vertical">
 
-                {
-                    points.map(point => <Step key={point.id} title={point.pointName} description={point.address} />)
-                }
-            </Steps>
+                    {
+                        points.map(point => <Step key={point.id} title={point.pointName} description={point.address} />)
+                    }
+                </Steps>
+            }
+
 
         </div>
     )

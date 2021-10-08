@@ -31,10 +31,12 @@ export const Main = (props: any) => {
     const [loading, setLoading] = useState(false)
     const [message, setMessage] = useState('')
     const [isError, setIsError] = useState(false)
-    const [currentStep, setCurrentStep] = useState(1)
+    const [currentStep, setCurrentStep] = useState(0)
     const [points, setPoints] = useState<IPoint[]>([])
     const [movmentType, setMovementType] = useState(TRANSPORT_TYPE.CAR)
+    const [isDestroy, setIsDestroy] = useState(false)
     const search = useLocation().search;
+
 
     const employeeId = new URLSearchParams(search).get('emploee_id');
     const lat = new URLSearchParams(search).get('lat');
@@ -48,13 +50,7 @@ export const Main = (props: any) => {
         currentDate
     })
 
-    // const convertedQueryParams =
-    // {
-    //     employeeId: 1125,
-    //     date: '2021-10-07',
-    //     lon: 37.3376426,
-    //     lat: 55.7386526,
-    // }
+
     useEffect(() => {
 
         setMessage('')
@@ -86,6 +82,7 @@ export const Main = (props: any) => {
 
 
     const startCalc = async () => {
+        setIsDestroy(true)
         try {
             setLoading(true)
             const response = await axios.post<IPointsCalculateRequest, IPointsResponse>(`${MAIN_URL}${START_CALC_ENDPOINT}`,
@@ -97,7 +94,7 @@ export const Main = (props: any) => {
                     movmentType: movmentType
                 }
             )
-            setPoints(response?.data?.points || [])
+            setPoints((response?.data?.points || []).filter(point => !!point.id))
 
         } catch (err) {
             setMessage(`Ошибка расчета маршрута: ${err}`)
@@ -105,6 +102,7 @@ export const Main = (props: any) => {
             setTimeout(handleCloseAlert, 5000)
         } finally {
             setLoading(false)
+            setIsDestroy(false)
         }
     }
 
@@ -143,25 +141,29 @@ export const Main = (props: any) => {
             </Row>
             <Row >
                 <Col md={6} style={{ textAlign: "center" }}>
-                    <Progress style={{ marginBottom: "2rem" }} strokeLinecap="square" type="circle" percent={Math.round(((currentStep + 1) / points.length) * 100)} />
-                    <PointList
-                        handleChangeStep={handleChangeStep}
-                        loading={loading}
-                        points={points}
-                        currentStep={currentStep}
-                    />
+                    {!isError && !!points.length &&
+                        <>
+                            <Progress style={{ marginBottom: "2rem" }} strokeLinecap="square" type="circle" percent={Math.round(((currentStep + 1) / points.length) * 100)} />
+                            <PointList
+                                handleChangeStep={handleChangeStep}
+                                loading={loading}
+                                points={points}
+                                currentStep={currentStep}
+                            />
+                        </>
+                    }
                 </Col>
                 <Col md={18} >
 
                     {
-                        !!points.length &&
+                        !!points.length && !isError &&
                         <>
                             <CalculateRoutes
                                 handleStartCalc={handleStartCalc}
                                 handleChangeMovmentType={handleChangeMovmentType}
                                 isDdisableButton={loading}
                             />
-                            <Map2GIS lat={convertedQueryParams.lat} lon={convertedQueryParams.lon} points={points} />
+                            <Map2GIS lat={convertedQueryParams.lat} lon={convertedQueryParams.lon} points={points} isDestroy={isDestroy} />
                         </>
                     }
 

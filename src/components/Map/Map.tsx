@@ -8,6 +8,7 @@ interface IProps {
     lat: number;
     lon: number;
     points: IPoint[];
+    isDestroy: boolean;
 }
 
 const MapWrapper = React.memo(
@@ -17,12 +18,20 @@ const MapWrapper = React.memo(
     () => true,
 );
 
-export const Map2GIS: React.FC<IProps> = ({ lat, lon, points }) => {
+export const Map2GIS: React.FC<IProps> = ({ lat, lon, points, isDestroy }) => {
     const { mapInstance, setMapInstance } = React.useContext(MapContext);
+    const [pointMarkers, setPointMarkers] = React.useState<Marker[]>([])
+
+
+    if (isDestroy && pointMarkers.length) {
+        pointMarkers.forEach(m => {
+            m && m.destroy?.()
+        })
+    }
+
     useEffect(() => {
 
         let userMarker: Marker;
-        let pointMarkers: Marker[] = [];
         load().then((mapglAPI) => {
             const map = new mapglAPI.Map('map-container', {
                 center: [lon, lat],
@@ -51,16 +60,17 @@ export const Map2GIS: React.FC<IProps> = ({ lat, lon, points }) => {
 
                     pointMarkers.push(marker)
                 })
+                setPointMarkers(pointMarkers)
             }
         });
 
         // Destroy the map on unmounted
         return () => {
-            mapInstance && mapInstance.destroy();
-            userMarker && userMarker.destroy()
-            pointMarkers.forEach(pointMarker => pointMarker && pointMarker.destroy())
+            mapInstance && mapInstance.destroy?.();
+            userMarker && userMarker.destroy?.()
+            pointMarkers.forEach(pointMarker => pointMarker && pointMarker.destroy?.())
         }
-    }, [points]);
+    }, [points, isDestroy]);
 
     return (
         <MapWrapper />
