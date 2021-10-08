@@ -33,6 +33,14 @@ module.exports = {
                 test: /\.(png|jpg|jpeg|gif)$/i,
                 type: "asset/resource",
             },
+            {
+                test: /\.svg$/,
+                type: 'asset/resource',
+                generator: {
+                    filename: 'icons/[hash][ext]'
+                },
+                use: 'svgo-loader'
+            },
         ],
     },
     resolve: {
